@@ -3,11 +3,10 @@
 namespace App\Models;
 
 use App\Facades\DateHelper;
-use DateTimeInterface;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 
-class MatchModel extends Model
+class MatchModel extends BaseModel
 {
     use HasFactory;
 
@@ -46,32 +45,6 @@ class MatchModel extends Model
         'prediction',
     ];
 
-    protected $casts = [
-        'home_goals' => 'integer',
-        'away_goals' => 'integer',
-        'halftime_home' => 'integer',
-        'halftime_away' => 'integer',
-        'fulltime_home' => 'integer',
-        'fulltime_away' => 'integer',
-        'extra_home' => 'integer',
-        'extra_away' => 'integer',
-        'penalty_home' => 'integer',
-        'penalty_away' => 'integer',
-        'home_winner' => 'boolean',
-        'away_winner' => 'boolean',
-        'timestamp' => 'integer',
-        'event_imported' => 'boolean',
-        'lineup_imported' => 'boolean',
-        'team_stats_imported' => 'boolean',
-        'player_stats_imported' => 'boolean',
-        'match_start_date' => 'datetime',
-        'match_date' => 'datetime',
-        'created_at' => 'datetime',
-        'updated_at' => 'datetime',
-        'match_minute' => 'string',
-        'match_time' => 'datetime',
-    ];
-
     protected $hidden = [
         'provider_id',
         'updated_at',
@@ -81,36 +54,30 @@ class MatchModel extends Model
         'player_stats_imported',
     ];
 
-
-    public function serializeDate(DateTimeInterface $date): string
+    public function getMatchMinuteAttribute(): string
     {
-        return $date->timezone("Europe/Istanbul")->format('Y-m-d H:i:s');
-    }
-
-    public function getMatchMinuteAttribute()
-    {
+        $matchDate = Carbon::createFromFormat('Y-m-d H:i:s', $this->match_date);
+        $now = Carbon::now();
+        $diffInMinutes = $matchDate->diffInMinutes($now);
         switch ($this->status) {
             case "playing" :
                 switch ($this->period){
                     case "first_half" :
-                        $minutes = DateHelper::getMinutesDiff($this->match_date);
-                        if ($minutes <= 45) {
-                            return "45+".$minutes-45;
+                        if ($diffInMinutes <= 45) {
+                            return $diffInMinutes;
                         } else {
-                            return $minutes;
+                            return $diffInMinutes."+"($diffInMinutes - 45);
                         }
                     case "second_half" :
-                        $minutes = DateHelper::getMinutesDiff($this->match_date) - 15;
-                        if ($minutes > 90) {
-                            return "90+".($minutes - 90);
+                        if ($diffInMinutes > 90) {
+                            return "90+".($diffInMinutes - 90);
                         } else {
-                            return $minutes;
+                            return $diffInMinutes;
                         }
                     case "half_time";
                         return "IY";
                     case 'extra_time':
-                        $minutes = DateHelper::getMinutesDiff($this->match_date);
-                        return $minutes;
+                        return $diffInMinutes;
                     case 'extra_half_time':
                         return "UZ";
                     case "penalty":
@@ -129,9 +96,9 @@ class MatchModel extends Model
         }
     }
 
-    public function getMatchTimeAttribute()
+    public function getMatchTimeAttribute(): string
     {
-        return $this->match_date->timezone("Europe/Istanbul")->format('H:i');
+        return Carbon::createFromFormat('Y-m-d H:i:s', $this->match_date)->timezone("Europe/Istanbul")->format('H:i');
     }
 
     public function league()
