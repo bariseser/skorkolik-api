@@ -45,6 +45,32 @@ class MatchModel extends BaseModel
         'prediction',
     ];
 
+    protected $casts = [
+        'home_goals' => 'integer',
+        'away_goals' => 'integer',
+        'halftime_home' => 'integer',
+        'halftime_away' => 'integer',
+        'fulltime_home' => 'integer',
+        'fulltime_away' => 'integer',
+        'extra_home' => 'integer',
+        'extra_away' => 'integer',
+        'penalty_home' => 'integer',
+        'penalty_away' => 'integer',
+        'home_winner' => 'boolean',
+        'away_winner' => 'boolean',
+        'timestamp' => 'integer',
+        'event_imported' => 'boolean',
+        'lineup_imported' => 'boolean',
+        'team_stats_imported' => 'boolean',
+        'player_stats_imported' => 'boolean',
+        'match_start_date' => 'datetime',
+        'match_date' => 'datetime',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+        'match_minute' => 'string',
+        'match_time' => 'datetime',
+    ];
+
     protected $hidden = [
         'provider_id',
         'updated_at',
@@ -58,7 +84,7 @@ class MatchModel extends BaseModel
     {
         $matchDate = Carbon::createFromFormat('Y-m-d H:i:s', $this->match_date);
         $now = Carbon::now();
-        $diffInMinutes = $matchDate->diffInMinutes($now);
+        $diffInMinutes = (int)$matchDate->diffInMinutes($now, true);
         switch ($this->status) {
             case "playing" :
                 switch ($this->period){
@@ -66,7 +92,7 @@ class MatchModel extends BaseModel
                         if ($diffInMinutes <= 45) {
                             return $diffInMinutes;
                         } else {
-                            return $diffInMinutes."+"($diffInMinutes - 45);
+                            return "45+".($diffInMinutes - 45);
                         }
                     case "second_half" :
                         if ($diffInMinutes > 90) {
