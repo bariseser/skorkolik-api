@@ -54,6 +54,8 @@ return [
 
     'url' => env('APP_URL', 'http://localhost'),
 
+    'cdn' => env('CDN_URL', 'http://dev.cdn.skorkolik.net'),
+
     /*
     |--------------------------------------------------------------------------
     | Application Timezone

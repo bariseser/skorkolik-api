@@ -61,6 +61,6 @@ class Player extends Model
         if (!$filename) {
             return null;
         }
-        return Config::get('app.url') . '/images/players/' . $filename;
+        return Config::get('cdn.url') . '/players/' . $filename;
     }
 }
