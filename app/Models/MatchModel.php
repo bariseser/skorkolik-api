@@ -80,6 +80,10 @@ class MatchModel extends BaseModel
         'player_stats_imported',
     ];
 
+     //106
+    // -15 ilk yarıdaki mola
+    // 91
+
     public function getMatchMinuteAttribute(): string
     {
         $matchDate = Carbon::createFromFormat('Y-m-d H:i:s', $this->match_date);
@@ -95,11 +99,11 @@ class MatchModel extends BaseModel
                             return "45+".($diffInMinutes - 45);
                         }
                     case "second_half" :
-                        $diffInMinutes = $diffInMinutes + 15; // 95
-                        if ($diffInMinutes > 90) {
-                            return "90+".($diffInMinutes - 90);
-                        } else {
+                        $diffInMinutes = $diffInMinutes - 15;
+                        if ($diffInMinutes <= 90) {
                             return $diffInMinutes;
+                        } else {
+                            return "90+".($diffInMinutes - 90);
                         }
                     case "half_time";
                         return "IY";
