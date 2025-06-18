@@ -89,6 +89,7 @@ class MatchModel extends BaseModel
         $matchDate = Carbon::createFromFormat('Y-m-d H:i:s', $this->match_date);
         $now = Carbon::now();
         $diffInMinutes = (int)$matchDate->diffInMinutes($now, true);
+
         switch ($this->status) {
             case "playing" :
                 switch ($this->period){
