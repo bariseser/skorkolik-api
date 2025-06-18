@@ -4,10 +4,6 @@ use App\Http\Controllers\BannerController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MatchController;
 
-Route::get('/', function () {
-    return view('welcome');
-});
-
 Route::prefix('api')->group(function () {
     Route::prefix('matches')->group(function () {
         Route::get('/', [MatchController::class, 'show']);
