@@ -99,7 +99,7 @@ class MatchModel extends BaseModel
                         if ($diffInMinutes > 90) {
                             return "90+".($diffInMinutes - 90);
                         } else {
-                            return $diffInMinutes - 15;
+                            return $diffInMinutes;
                         }
                     case "half_time";
                         return "IY";
