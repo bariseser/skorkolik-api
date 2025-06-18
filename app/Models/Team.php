@@ -78,6 +78,6 @@ class Team extends Model
         if (!$filename) {
             return null;
         }
-        return Config::get('cdn.url') . '/teams/' . $filename;
+        return Config::get('app.cdn') . '/teams/' . $filename;
     }
 }

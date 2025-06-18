@@ -35,7 +35,7 @@ class League extends Model
         if (!$filename) {
             return null;
         }
-        return Config::get('cdn.url') . '/leagues/' . $filename;
+        return Config::get('app.cdn') . '/leagues/' . $filename;
     }
 
     public function country()
