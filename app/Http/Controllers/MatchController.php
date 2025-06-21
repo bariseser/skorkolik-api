@@ -20,9 +20,8 @@ class MatchController extends Controller
             $date = Carbon::parse($date);
         }
 
-        $startDate = $date->timezone('europe/istanbul')->startOfDay();
-        $endDate = Carbon::now()->timezone('europe/istanbul')->endOfDay();
-
+        $startDate = $date->startOfDay();
+        $endDate = $startDate->copy()->endOfDay();
         $matches = MatchModel::with([
             'league:id,name,logo,order,country_id',
             'league.country:id,name,flag',
